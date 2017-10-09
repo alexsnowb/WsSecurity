@@ -111,13 +111,6 @@ class WsSecurityTest extends TestCase
 
     public function testRuSetServer()
     {
-        $context = stream_context_create(array(
-            'ssl' => array(
-                'verify_peer' => false,
-                'verify_peer_name' => false,
-                'allow_self_signed' => true
-            )
-        ));
 
         $soapClient = new \SoapClient('https://test-gw.ru-set.com/BusXmlService.svc?wsdl', [
             'soap_version' => SOAP_1_2,
@@ -125,7 +118,6 @@ class WsSecurityTest extends TestCase
             'cache_wsdl' => WSDL_CACHE_NONE,
             'keep_alive' => false,
             'exceptions' => 1,
-            'stream_context' => $context
         ]);
 
         $headers = [];

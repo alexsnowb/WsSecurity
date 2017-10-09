@@ -1,7 +1,7 @@
 <?php
 namespace WsdlToPhp\WsSecurity\Tests;
 
-use WsdlToPhp\WsSecurity\Tests\TestCase;
+use SoapHeader;
 use WsdlToPhp\WsSecurity\WsSecurity;
 
 class WsSecurityTest extends TestCase
@@ -107,5 +107,43 @@ class WsSecurityTest extends TestCase
                 <wsse:Nonce EncodingType="http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-soap-message-security-1.0#Base64Binary">([a-zA-Z0-9=]*)</wsse:Nonce>
             </wsse:UsernameToken>
         </wsse:Security>'), $header->data->enc_value);
+    }
+
+    public function testRuSetServer()
+    {
+        $context = stream_context_create(array(
+            'ssl' => array(
+                'verify_peer' => false,
+                'verify_peer_name' => false,
+                'allow_self_signed' => true
+            )
+        ));
+
+        $soapClient = new \SoapClient('https://test-gw.ru-set.com/BusXmlService.svc?wsdl', [
+            'soap_version' => SOAP_1_2,
+            'trace' => true,
+            'cache_wsdl' => WSDL_CACHE_NONE,
+            'keep_alive' => false,
+            'exceptions' => 1,
+            'stream_context' => $context
+        ]);
+
+        $headers = [];
+
+        $headers[] = WsSecurity::createWsSecuritySoapHeader('Xml_be50afa3473140e0b799245656c588ad', 'fa$xq7A8');
+        $headers[] = new SoapHeader('http://www.w3.org/2005/08/addressing', 'Action', 'http://tempuri.org/IBusXmlService/GetDispatch', false);
+
+        $soapClient->__setSoapHeaders($headers);
+
+        try {
+            $result = $soapClient->__soapCall('GetDispatch', []);
+        } catch (\SoapFault $exception) {
+            die($exception);
+        }
+
+        $this->assertTrue(
+            isset($result->GetDispatchResult),
+            'Result not correct. GetDispatchResult not exists'
+        );
     }
 }

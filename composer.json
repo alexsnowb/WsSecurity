@@ -1,19 +1,19 @@
 {
-    "name" : "wsdltophp/wssecurity",
+    "name" : "alexsnowb/wssecurity",
     "description" : "Allows to easily add Ws Security header to a SOAP Request",
     "type" : "library",
     "keywords" : ["soap","php","wsse"],
     "license" : "MIT",
     "authors" : [
         {
-            "name": "Mikaël DELSOL",
-            "email": "contact@wsdltophp.com",
-            "homepage": "https://www.wsdltophp.com",
+            "name": "Alex",
+            "email": "aa@ru-set.com",
+            "homepage": "https://ru-set.com",
             "role": "Owner"
         }
     ],
     "support" : {
-        "email" : "contact@wsdltophp.com"
+        "email" : "aa@ru-set.com"
     },
     "require" : {
         "php" : ">=5.3",

@@ -138,4 +138,41 @@ class WsSecurityTest extends TestCase
             'Result not correct. GetDispatchResult not exists'
         );
     }
+
+    public function testRuSetGetRuns()
+    {
+        /** @var \SoapClient $soapClient */
+        $soapClient = new \SoapClient('https://test-gw.ru-set.com/BusXmlService.svc?wsdl', [
+            'soap_version' => SOAP_1_2,
+            'trace' => true,
+            'cache_wsdl' => WSDL_CACHE_NONE,
+            'keep_alive' => false,
+            'exceptions' => 1,
+        ]);
+
+        $headers = [];
+
+        $headers[] = WsSecurity::createWsSecuritySoapHeader('Xml_be50afa3473140e0b799245656c588ad', 'fa$xq7A8');
+        $headers[] = new SoapHeader('http://www.w3.org/2005/08/addressing', 'Action', 'http://tempuri.org/IBusXmlService/GetRuns', false);
+
+        $soapClient->__setSoapHeaders($headers);
+
+        $getRuns = new \stdClass();
+        $getRuns->parameters = new \stdClass();
+        $getRuns->parameters->DepartureBusStopID = 23647;
+        $getRuns->parameters->ArrivalBusStopID = 23650;
+        $getRuns->parameters->DepartureDate = '2018-11-28';
+
+        try {
+            $result = $soapClient->__soapCall('GetRuns',  ['parameters' => $getRuns]);
+        } catch (\SoapFault $exception) {
+            die($exception);
+        }
+
+
+        $this->assertTrue(
+            isset($result->GetRunsResult),
+            'Result not correct. GetRunsResult not exists'
+        );
+    }
 }
